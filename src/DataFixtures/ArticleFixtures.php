@@ -4,9 +4,11 @@ namespace App\DataFixtures;
 
 use App\Entity\Article;
 use App\Entity\Comment;
+use App\Entity\Tag;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class ArticleFixtures extends BaseFixture
+class ArticleFixtures extends BaseFixture implements DependentFixtureInterface
 {
     private static $articleTitles = [
         'Why Asteroids Taste Like Bacon',
@@ -67,8 +69,29 @@ EOF
 //                ->setCreatedAt($this->faker->dateTimeBetween('-100 days', '-1 days'))
 //                ->setUpdatedAt($this->faker->dateTimeBetween('-100 days', 'now'))
             ;
+
+            /** @var Tag[] $tags */
+            $tags = $this->getRandomReferences('main_tags', $this->faker->numberBetween(0, 5));
+            foreach ($tags as $tag) {
+                $article->addTag($tag);
+            }
+
+            return $article;
         });
 
         $manager->flush();
+    }
+
+    /**
+     * This method must return an array of fixtures classes
+     * on which the implementing class depends on
+     *
+     * @return array
+     */
+    public function getDependencies()
+    {
+        return [
+            TagFixtures::class
+        ];
     }
 }

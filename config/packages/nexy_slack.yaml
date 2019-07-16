@@ -1,5 +1,5 @@
 #https://github.com/nexylan/slack-bundle
 
-nexy_slack:
+#nexy_slack:
     # The Slack API Incoming WebHooks URL.
-    endpoint: https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX # Required
+    #endpoint: ~ #https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX # Required

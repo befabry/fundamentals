@@ -34,4 +34,4 @@ services:
     # please note that last definitions always *replace* previous ones
 
     #Pour TOUS les services
-    Nexy\Slack\Client: '@nexy_slack.client'
+    #Nexy\Slack\Client: '@nexy_slack.client'
