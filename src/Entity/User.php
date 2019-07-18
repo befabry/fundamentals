@@ -32,6 +32,16 @@ class User implements UserInterface
      */
     private $firstName;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $password;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $twitterUsername;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -81,17 +91,9 @@ class User implements UserInterface
     /**
      * @see UserInterface
      */
-    public function getPassword()
-    {
-        // not needed for apps that do not check user passwords
-    }
-
-    /**
-     * @see UserInterface
-     */
     public function getSalt()
     {
-        // not needed for apps that do not check user passwords
+        // not needed when using bcrypt or argon
     }
 
     /**
@@ -113,5 +115,43 @@ class User implements UserInterface
         $this->firstName = $firstName;
 
         return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    public function getTwitterUsername(): ?string
+    {
+        return $this->twitterUsername;
+    }
+
+    public function setTwitterUsername(?string $twitterUsername): self
+    {
+        $this->twitterUsername = $twitterUsername;
+
+        return $this;
+    }
+
+    public function getAvatarUrl(int $size = null): string
+    {
+        $url = 'https://robohash.org/'.$this->getEmail();
+
+        if($size){
+            $url .= sprintf('?size=%dx%d', $size, $size);
+        }
+
+        return $url;
     }
 }
