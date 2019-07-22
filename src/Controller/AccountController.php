@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -16,6 +17,8 @@ class AccountController extends BaseController
 {
     /**
      * @Route("/account", name="app_account")
+     * @param LoggerInterface $logger
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function index(LoggerInterface $logger)
     {
@@ -23,6 +26,18 @@ class AccountController extends BaseController
 
         return $this->render('account/index.html.twig', [
 
+        ]);
+    }
+
+    /**
+     * @Route("/api/account", name="api_account")
+     */
+    public function accountApi()
+    {
+        $user = $this->getUser();
+
+        return $this->json($user, JsonResponse::HTTP_OK, [], [
+            'groups' => ['main'],
         ]);
     }
 }
