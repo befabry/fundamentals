@@ -27,11 +27,7 @@ class ArticleAdminController extends AbstractController
      */
     public function new(EntityManagerInterface $em, Request $request)
     {
-        $form = $this->createForm(ArticleFormType::class)
-            ->add('save', SubmitType::class, [
-                'label' => 'Create Task',
-                'attr' => ['class' => 'btn btn-primary'],
-            ]);
+        $form = $this->createForm(ArticleFormType::class);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -54,13 +50,32 @@ class ArticleAdminController extends AbstractController
     /**
      * @Route("/admin/article/{id}/edit", name="admin_article_edit")
      * @param Article $article
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @IsGranted("MANAGE", subject="article")
      */
-    public function edit(Article $article)
+    public function edit(Article $article, Request $request, EntityManagerInterface $em)
     {
-        $this->denyAccessUnlessGranted('MANAGE', $article);
+        //$this->denyAccessUnlessGranted('MANAGE', $article);
 
-        dd($article);
+        $form = $this->createForm(ArticleFormType::class, $article);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($article);
+            $em->flush();
+
+            $this->addFlash('success', 'Article Updated ! Inaccuracies squashed !');
+
+            return $this->redirectToRoute('admin_article_edit', [
+                'id' => $article->getId(),
+            ]);
+        }
+
+        return $this->render('article_admin/edit.html.twig', [
+            'articleForm' => $form->createView(),
+        ]);
     }
 
     /**

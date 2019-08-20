@@ -1,0 +1,15 @@
+{{ form_start(articleForm) }}
+
+{{ form_row(articleForm.title, {
+    label: 'Article Title',
+}) }}
+
+{{ form_row(articleForm.content) }}
+{{ form_row(articleForm.publishedAt) }}
+{{ form_row(articleForm.author) }}
+
+{{ include('components/_submit_button.html.twig', {
+    button_text: button_text
+}) }}
+
+{{ form_end(articleForm) }}
