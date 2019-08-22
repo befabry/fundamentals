@@ -3,9 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Article;
-use App\Entity\User;
 use App\Repository\UserRepository;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -38,7 +36,9 @@ class ArticleFormType extends AbstractType
                 //@TODO delete data (=> default value), only to avoid installing a datepicker
                 'data' => new \DateTime(),
             ])
-            ->add('author', EntityType::class, [
+            ->add('author', UserSelectTextType::class)
+            /* Keeping for reference
+             * ->add('author', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => function(User $user){
                     return sprintf('(%d) %s - %s', $user->getId(), $user->getEmail(), $user);
@@ -46,7 +46,7 @@ class ArticleFormType extends AbstractType
                 'placeholder' => 'Choose an author',
                 'choices' => $this->userRepository->findAllEmailAlphabetical(),
                 'invalid_message' => 'Symfony is too smart for your hacking !'
-            ])
+            ])*/
         ;
     }
 
