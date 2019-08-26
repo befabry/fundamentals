@@ -1,15 +1,17 @@
 {{ form_start(articleForm) }}
 
-{{ form_row(articleForm.title, {
-    label: 'Article Title',
-}) }}
+    {{ form_row(articleForm.title, {
+        label: 'Article Title',
+    }) }}
 
-{{ form_row(articleForm.content) }}
-{{ form_row(articleForm.publishedAt) }}
-{{ form_row(articleForm.author) }}
+    {{ form_row(articleForm.content) }}
+    {% if articleForm.publishedAt is defined %}
+        {{ form_row(articleForm.publishedAt) }}
+    {% endif %}
+    {{ form_row(articleForm.author) }}
 
-{{ include('_components/_submit_button.html.twig', {
-    button_text: button_text
-}) }}
+    {{ include('_components/_submit_button.html.twig', {
+        button_text: button_text
+    }) }}
 
 {{ form_end(articleForm) }}

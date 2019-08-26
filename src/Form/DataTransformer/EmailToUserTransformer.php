@@ -48,8 +48,6 @@ class EmailToUserTransformer implements DataTransformerInterface
         $callback = $this->finderCallback;
         $user = $callback($this->userRepository, $value);
 
-        $user = $this->userRepository->findOneBy(['email' => $value]);
-
         if (!$user) {
             throw new TransformationFailedException(sprintf(
                 'No user found with email "%s"',
