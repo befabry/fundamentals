@@ -7,16 +7,15 @@ use App\Form\ArticleFormType;
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Class ArticleAdminController
  * @package App\Controller
  */
-class ArticleAdminController extends AbstractController
+class ArticleAdminController extends BaseController
 {
     /**
      * @Route("/admin/article/new", name="admin_article_new")
@@ -82,6 +81,7 @@ class ArticleAdminController extends AbstractController
 
     /**
      * @Route("/admin/article", name="admin_article_list")
+     * @IsGranted("MANAGE")
      */
     public function list(ArticleRepository $articleRepository)
     {
@@ -89,6 +89,35 @@ class ArticleAdminController extends AbstractController
 
         return $this->render('article_admin/list.html.twig', [
             'articles' => $articles,
+        ]);
+    }
+
+    /**
+     * @Route("/admin/article/location-select", name="admin_article_location_select")
+     * @IsGranted("ROLE_USER")
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function getSpecificLocationSelect(Request $request)
+    {
+        #First make sure the user is logged (IsGranted)
+        #The User is admin and he has articles created
+        #Method can be moved to a Voter, but only used here
+        if (!$this->isGranted('ROLE_ADMIN_ARTICLE') && $this->getUser()->getArticles()->isEmpty()) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $article = new Article();
+        $article->setLocation($request->query->get('location'));
+        $form = $this->createForm(ArticleFormType::class, $article);
+
+        if (!$form->has('specificLocationName')) {
+            return new Response(null, Response::HTTP_NO_CONTENT);
+        }
+
+        return $this->render('article_admin/_specific_location_name.html.twig', [
+            'articleForm' => $form->createView()
         ]);
     }
 }

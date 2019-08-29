@@ -62,7 +62,7 @@ class User implements UserInterface
     private $apiTokens;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Article", mappedBy="author")
+     * @ORM\OneToMany(targetEntity="App\Entity\Article", mappedBy="author", fetch="EXTRA_LAZY")
      */
     private $articles;
 
@@ -94,7 +94,8 @@ class User implements UserInterface
 
     public function setEmail(string $email): self
     {
-        $this->email = $email;
+        //make sure the e-mail is lower case to avoid duplication
+        $this->email = strtolower($email);
 
         return $this;
     }
